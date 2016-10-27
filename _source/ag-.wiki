@@ -1,0 +1,24 @@
+| ag         |                       |
+|------------|-----------------------|
+| ag-        | 做, 办理,             |
+| -ent       | 表示人                |
+| agent      | 代理人                |
+| -ial       | 形容词后缀            |
+| agential   | 代理人的              |
+| sub-       | 副的                  |
+| subagent   | 副代理人              |
+| co-        | 共同                  |
+| coagent    | 共事者,合作者         |
+| -ency      | 名词后缀              |
+| agency     | 代理,代理处,机构,作用 |
+| coagency   | 共事,合作             |
+| -ile       | 形容词后缀            |
+| agile      | 敏捷的                |
+| -ility     | 名词后缀              |
+| agility    | 敏捷                  |
+| -ate       | 动词后缀,使骚动       |
+| agitate    | 鼓动                  |
+| -ion       | 名词后缀              |
+| agitation  | 煽动                  |
+| agitator   | 煽动者                |
+| agitatress | 女鼓舞家              |

@@ -1,0 +1,31 @@
+%toc TwitVim
+
+== Mappings ==
+
+=== 打开关闭 ===
+  * <C-w>s or :[N]split - Clone current window to split(N: height)
+  * <C-w>v or :[N]vsplit - Clone current window to split(N: height)
+  * <C-w>n or :[N]new
+  * <C-w>^ = :split #
+  * :[N]vnew
+  * :vert {cmd}, :lefta {cmd}, :abo {cmd}, :rightb {cmd}, :to {cmd}, :bo {cmd}
+  * <C-w>q or :q - exit window
+  * :hide
+  * <C-w>o or :only
+
+=== 移动光标 ===
+  * <C-w>t - 调到最左上角的窗口
+  * <C-w>b - 调到最右下角的窗口
+  * <C-w>p - 调到上次窗口位置
+
+=== 移动窗口 ===
+  * <C-w>r or <C-w>R - 旋转窗口
+  * <C-w>x - 交换相临窗口位置
+  * <C-w>H, <C-w>J, <C-w>K, <C-w>L, <C-w>T
+
+=== 改变窗口大小 ===
+  * <C-W>= - 让所有窗口大小相等
+  * <C-w>- , <C-w>+ - 减小或增加窗口高度
+  * <C-w>< , <C-w>> - 减小或增加窗口宽度
+  * <C-w>_ or z{nr}<cr> - 设置高度
+  * <C-w>| - 设置宽度

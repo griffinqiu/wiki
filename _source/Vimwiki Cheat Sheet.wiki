@@ -1,0 +1,178 @@
+%toc Vimwiki Cheat Sheet
+
+== Mappings ==
+
+=== Global mappings ===
+  * [count]<Leader>ww or <Plug>VimwikiIndex
+  * [count]<Leader>wt or <Plug>VimwikiTabIndex
+  * <Leader>ws or <Plug>VimwikiUISelect
+  * [count]<Leader>wi or <Plug>VimwikiDiaryIndex
+  * [count]<Leader>w<Leader>w or <Plug>VimwikiMakeDiaryNote
+
+=== Local mappings ===
+  * <Leader>wh <Plug>Vimwiki2HTML
+  * <Leader>whh <Plug>Vimwiki2HTMLBrowse
+  * <Leader>w<Leader>i <Plug>VimwikiDiaryGenerateLinks
+  * <CR>, <S-CR>, <C-CR>, <C-S-CR>, <Backspace>
+  * <Tab>, <S-Tab>
+  * <Leader>wd <Plug>VimwikiDeleteLink
+  * <Leader>wr <Plug>VimwikiRenameLink
+  * :nmap <S-Space> <Plug>VimwikiToggleListItem
+  * =, -, +
+  * glm, gll, gl8, gl3, gl-, gl1, gqq
+  * <A-Left>, <A-Right>	|:VimwikiTableMoveColumnLeft|, |VimwikiTableMoveColumnRight|
+  * <C-Up>, <C-Down>	|:VimwikiDiaryPrevDay|, |:VimwikiDiaryNextDay|
+
+=== Text objects ===
+  * ah, ih
+  * a\, i\	-	Table cell
+  * ac, ic	-	Inner table column
+
+== Useful commands ==
+  * :VimwikiSearch /pattern/ or :VWS /pattern/
+  * :VimwikiTable
+
+== Wiki syntax ==
+
+=== Typefaces ===
+  * *bold text*
+  * _italic text_
+  * ~~strikeout text~~
+  * `code (no syntax) text`
+  * super^script^
+  * sub,,script,,
+
+=== Links ===
+Link with spaces in it: >
+  [[This is a link]]
+or: >
+  [[This is a link source|Description of the link]]
+
+Links to directories (ending with a "/") are also supported: >
+  [[/home/somebody/|Home Directory]]
+
+Use |g:vimwiki_dir_link| to control the behaviour when opening directories.
+
+Raw URLs~
+
+Raw URLs are also supported: >
+  http://code.google.com/p/vimwiki
+  mailto:habamax@gmail.com
+  ftp://vim.org
+  
+=== Headers ===
+
+=== Paragraphs ===
+
+This is first paragraph
+with two lines.
+
+This is a second paragraph with
+two lines.
+
+=== Lists ===
+
+  * Bulleted list item 1
+  * Bulleted list item 2
+    * Bulleted list sub item 1
+    * Bulleted list sub item 2
+    * more ...
+      * and more ...
+      * ...
+    * Bulleted list sub item 3
+    * etc.
+
+=== Tables ===
+
+| Year | Temperature (low) | Temperature (high) |
+|------|-------------------|--------------------|
+| 1900 | -10               | 25                 |
+| 1910 | -15               | 30                 |
+| 1920 | -10               | 32                 |
+| 1930 | _N/A_             | _N/A_              |
+| 1940 | -2                | 40                 |
+
+ | a  | b  | c | d |
+ | \/ | e  | > | f |
+ | \/ | \/ | > | g |
+ | h  | >  | > | > |
+ 
+=== Preformatted text ===
+{{{
+  Tyger! Tyger! burning bright
+   In the forests of the night,
+    What immortal hand or eye
+     Could frame thy fearful symmetry?
+  In what distant deeps or skies
+   Burnt the fire of thine eyes?
+    On what wings dare he aspire?
+     What the hand dare sieze the fire?
+}}}
+
+=== Mathematical formulae ===
+
+Mathematical formulae are highlighted, and can be rendered in HTML using the
+powerful open source display engine MathJax (http://www.mathjax.org/).
+
+=== Blockquotes ===
+
+    This would be a blockquote in vimwiki. It is not highlighted in vim but
+    could be styled by CSS in HTML. Blockquotes are usually used to quote a
+    long piece of text from another source.
+    
+=== Comments ===
+
+%% this text would not be in HTML
+
+=== Horizontal line ===
+
+----
+-----------------------
+
+=== Schemes ===
+[[wiki#:This is a link]]
+[[wiki#:This is a link source|Description of the link]]
+[[diary:2012-03-05]]
+This scheme precludes explicit inclusion of |vimwiki-option-diary_rel_path|,
+and is most useful on subwiki pages to avoid links such as: >
+[[../../diary/2012-03-05]]
+[[local:../assets/data.csv|data (CSV)]]
+[[file:///home/somebody/a/b/c/music.mp3]]
+
+=== Transclusions ===
+
+{{local:../../images/vimwiki_logo.png}}
+
+{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png}}
+
+{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png|Vimwiki}}
+
+{{http://.../vimwiki_logo.png|cool stuff|style="width:150px; height: 120px;"}}
+
+{{http://.../vimwiki_logo.png|class|class="center flow blabla"}}
+
+[[http://someaddr.com/bigpicture.jpg|{{http://someaddr.com/thumbnail.jpg}}]]
+
+== Folding/Outline ==
+
+== Placeholders ==
+  * `%title`
+  * `%toc`
+  * `%nohtml`
+  * `%template`
+
+
+== Todo lists ==
+  * [.] Toggle list item on/off.
+    * [ ] Simple toggling between [ ] and [X].
+    * [ ] All list's subitems should be toggled on/off appropriately.
+    * [ ] Toggle child subitems only if current line is list item
+    * [X] Parent list item should be toggled depending on it's child items.
+  * [ ] Make numbered list items toggleable too
+  * [ ] Add highlighting to list item boxes
+  * [X] Add [ ] to the next created with o, O and <CR> list item.
+  * [ ] 
+
+== Diary ==
+=== Calendar ===
+

@@ -1,0 +1,14 @@
+%toc TwitVim
+
+== Mappings ==
+  * Alt-T, Ctrl-T - In visual mode, Alt-T posts the highlighted text to Twitter.
+  * Alt-R, <Leader>r - @ the tweet owner
+  * <Leader>Ctrl-R - Reply to all
+  * <Leader>R - Retweet
+  * Alt-D, <Leader>d - Send message to tweet owner
+  * Alt-G, <Leader>g - TwitVim-goto
+  * <Leader>e - ?
+  * <Leader>p - User Profile
+  * <Leader>@ - Get the @ tweet
+  * <C-o>, <C-i>
+  * <Leader><Leader> Refresh
