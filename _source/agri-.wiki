@@ -1,0 +1,17 @@
+| agri-             |                  |
+|-------------------|------------------|
+| agri-, agro-, agr | field 田地, 农田 |
+| -ure              | 名词后缀         |
+| -al               | 形容词后缀       |
+| -ist              | 表示人           |
+| agriculture       | 农业             |
+| agricultural      | 农业的           |
+| agricultist       | 农业家           |
+| agricorporation   | 农业综合性公司   |
+| motor             | 机器             |
+| agrimotor         | 农用拖拉机       |
+| agrinomy          | 农学             |
+| -logy             | ...学            |
+| agrilogy          | 农业土壤学       |
+| agro-town         | 建设在农村的城镇 |
+

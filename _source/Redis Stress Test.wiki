@@ -1,0 +1,891 @@
+%title Redis Stress Test
+
+== Todo List ==
+  * [X] GNS prepare Servers and initialize environment
+  * [X] Redis Benchmark
+  * [X] Run the User Online Count test script for contrast the result of last week test.
+  * [X] The User Request Write/Read/Delete Test. 
+  * [ ] The Neighbor Action Write/Read Test.
+    
+== Server infos ==
+
+  * Redis
+    * ec2-us-sco2-prod-redis03.sng.ubi.com
+      * /etc/init.d/redis
+      * /etc/init.d/redis_6380
+    * ec2-us-sco2-prod-redis04.sng.ubi.com 
+  * Ab
+    * AB01    ec2-54-224-117-46.compute-1.amazonaws.com 
+    * AB02    ec2-54-196-26-176.compute-1.amazonaws.com 
+    * AB03    ec2-50-16-159-244.compute-1.amazonaws.com
+
+== Redis Benchmark ==
+=== Master - 3 instances run in the same time ===
+
+{{{ class="brush: bash"
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-benchmark -c 100 -n 100000 -q
+PING_INLINE: 56116.72 requests per second
+PING_BULK: 52192.07 requests per second
+SET: 50000.00 requests per second
+GET: 49652.43 requests per second
+INCR: 50377.83 requests per second
+LPUSH: 47348.48 requests per second
+LPOP: 38240.92 requests per second
+SADD: 39666.80 requests per second
+SPOP: 38714.67 requests per second
+LPUSH (needed to benchmark LRANGE): 41649.31 requests per second
+LRANGE_100 (first 100 elements): 30349.01 requests per second
+LRANGE_300 (first 300 elements): 19743.34 requests per second
+LRANGE_500 (first 450 elements): 16441.96 requests per second
+LRANGE_600 (first 600 elements): 15908.37 requests per second
+MSET (10 keys): 46317.74 requests per second
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-benchmark -p 6381 -c 100 -n 100000 -q
+PING_INLINE: 33444.82 requests per second
+PING_BULK: 30413.62 requests per second
+SET: 27870.68 requests per second
+GET: 35236.08 requests per second
+INCR: 36205.65 requests per second
+LPUSH: 39541.32 requests per second
+LPOP: 31897.93 requests per second
+SADD: 29904.30 requests per second
+SPOP: 28113.58 requests per second
+LPUSH (needed to benchmark LRANGE): 28409.09 requests per second
+LRANGE_100 (first 100 elements): 20716.80 requests per second
+LRANGE_300 (first 300 elements): 12271.44 requests per second
+LRANGE_500 (first 450 elements): 9882.40 requests per second
+LRANGE_600 (first 600 elements): 8245.38 requests per second
+MSET (10 keys): 25660.76 requests per second
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-benchmark -p 6381 -c 100 -n 100000 -q
+PING_INLINE: 31017.37 requests per second
+PING_BULK: 30788.18 requests per second
+SET: 32010.24 requests per second
+GET: 34506.55 requests per second
+INCR: 33189.51 requests per second
+LPUSH: 29967.04 requests per second
+LPOP: 31675.64 requests per second
+SADD: 27847.40 requests per second
+SPOP: 31466.33 requests per second
+LPUSH (needed to benchmark LRANGE): 27382.26 requests per second
+LRANGE_100 (first 100 elements): 21939.45 requests per second
+LRANGE_300 (first 300 elements): 16043.64 requests per second
+LRANGE_500 (first 450 elements): 11009.58 requests per second
+LRANGE_600 (first 600 elements): 10530.75 requests per second
+MSET (10 keys): 16463.62 requests per second
+
+}}}
+
+=== Slave ===
+{{{ class="brush: bash"
+[root@ec2-us-sco2-prod-redis04 ~]# redis-benchmark -c 100 -n 100000 -q
+PING_INLINE: 27770.06 requests per second
+PING_BULK: 27203.48 requests per second
+SET: 26068.82 requests per second
+GET: 27677.83 requests per second
+INCR: 31918.29 requests per second
+LPUSH: 28628.69 requests per second
+LPOP: 24813.89 requests per second
+SADD: 25451.77 requests per second
+SPOP: 22634.68 requests per second
+LPUSH (needed to benchmark LRANGE): 23860.65 requests per second
+LRANGE_100 (first 100 elements): 16417.67 requests per second
+LRANGE_300 (first 300 elements): 11551.35 requests per second
+LRANGE_500 (first 450 elements): 8983.11 requests per second
+LRANGE_600 (first 600 elements): 7178.75 requests per second
+MSET (10 keys): 28384.90 requests per second
+}}}
+
+== Redis tuning (Not start) ==
+
+[[|]] Server    | Option                      | Params   |
+|-----------|-----------------------------|----------|
+| Master    | # save                      | 900 1    |
+| \/        | \/                          | 300 10   |
+| \/        | \/                          | 60 10000 |
+| \/        | appendonly                  | no       |
+| Slave     | save                        | 900 1    |
+| \/        | \/                          | 300 10   |
+| \/        | \/                          | 60 10000 |
+| \/        | appendonly                  | yes      |
+| \/        | appendfsync                 | everysec |
+| \/        | no-appendfsync-on-rewrite   | yes      |
+| \/        | auto-aof-rewrite-percentage | 100      |
+| \/        | auto-aof-rewrite-min-size   | 64mb     |
+| Ohter     | max clients                 | >        |
+| \/        | max memory                  | >        |
+| \/        | activerehashing             | yes      |
+| \/        | hz                          | 10       |
+| Data Type | hash-max-ziplist-entries    | 512      |
+| \/        | hash-max-ziplist-value      | 64       |
+| \/        | set-max-intset-entries      | 512      |
+| \/        | zset-max-zliplist-entries   | 128      |
+| \/        | zset-max-zliplist-value     | 64       |
+
+[[==]] CheckList Before Stress Test ==
+  * [X] Redis connection reset
+  * [X] Restart httpd
+  * [X] Reset access_log and error_log
+  * [X] Reset Redis
+  * [X] set uid 100000000000000
+
+== CheckPoint in Stress Test ==
+  * [X] Httpd error_log
+  * [X] system load (zabbix)
+  * [X] load average (zabbix)
+  * [X] Network connection (zabbix)
+
+== Record Info ==
+  * [X] AB request count * concurrent count
+  * [X] AB unfinish request count
+  * [X] Error Log 
+  * [X] Slow Log
+  * [X] watch "redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec'"
+  * [X] `redis-cli --latency` during ab
+  * [X] How many requests/actions in Redis 
+ib
+
+== User Request Stress Test ==
+
+=== 1 round ===
+
+`ab -n 10000 -c 40 http://localhost/request-write-test.php`
+
+`finished in 109 sec`
+
+{{{ class="brush: bash"
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 06:37:19 2014
+connected_clients:346
+used_memory:339760128
+used_memory_human:324.02M
+used_memory_rss:346279936
+used_memory_peak:343277264
+used_memory_peak_human:327.37M
+used_memory_lua:33792
+instantaneous_ops_per_sec:50590
+
+
+127.0.0.1:6380> slowlog get
+1) 1) (integer) 2
+   2) (integer) 1389249407
+   3) (integer) 13082
+   4) 1) "EXPIRE"
+      2) "rs_100000000002411"
+      3) "1296000"
+2) 1) (integer) 1
+   2) (integer) 1389249406
+   3) (integer) 13038
+   4) 1) "RPUSH"
+      2) "ALL_REQUEST_KEYS"
+      3) "r_48220"
+3) 1) (integer) 0
+   2) (integer) 1389249404
+   3) (integer) 13064
+   4) 1) "EXPIRE"
+      2) "rs_100000000001505"
+      3) "1296000"
+      
+127.0.0.1:6380> get uid
+"100000000030000"
+127.0.0.1:6380> llen ALL_REQUEST_KEYS
+(integer) 763130 
+
+[Thu Jan 09 01:36:38 2014] [error] [client ::1] PHP Warning:  date(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /var/www/html/library.php on line 285
+
+}}}
+
+
+=== 2 round ===
+
+`ab -n 200000 -c 80 http://localhost/request-write-test.php`
+
+`finished in 1750 sec`
+
+{{{ class="brush: bash"
+
+# netstat -an | grep 6380 | grep ESTABLISH | wc -l
+442
+# netstat -an | grep 6380 | grep TIME_WAIT | wc -l
+30
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 07:33:01 2014
+connected_clients:443
+used_memory:6930987152
+used_memory_human:6.45G
+used_memory_rss:7060918272
+used_memory_peak:7085051736
+used_memory_peak_human:6.60G
+used_memory_lua:33792
+instantaneous_ops_per_sec:70438
+
+127.0.0.1:6380> SLOWLOG get
+ 1) 1) (integer) 30
+    2) (integer) 1389252706
+    3) (integer) 181799
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 2) 1) (integer) 29
+    2) (integer) 1389252575
+    3) (integer) 239790
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 3) 1) (integer) 28
+    2) (integer) 1389252473
+    3) (integer) 226472
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 4) 1) (integer) 27
+    2) (integer) 1389252351
+    3) (integer) 147660
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 5) 1) (integer) 26
+    2) (integer) 1389252240
+    3) (integer) 227613
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 6) 1) (integer) 25
+    2) (integer) 1389252138
+    3) (integer) 304351
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 7) 1) (integer) 24
+    2) (integer) 1389252064
+    3) (integer) 10710
+    4) 1) "LPUSH"
+       2) "rs_100000000389210"
+       3) "r_9911922"
+ 8) 1) (integer) 23
+    2) (integer) 1389252037
+    3) (integer) 906881
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 9) 1) (integer) 22
+    2) (integer) 1389251948
+    3) (integer) 938262
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+10) 1) (integer) 21
+    2) (integer) 1389251863
+    3) (integer) 790235
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+
+127.0.0.1:6380> SLOWLOG len
+(integer) 31
+
+127.0.0.1:6380> get uid
+"100000000600000"
+
+127.0.0.1:6380> llen ALL_REQUEST_KEYS
+(integer) 15282647
+
+[root@ec2-us-sco2-prod-redis03 ~]# free -m
+             total       used       free     shared    buffers     cached
+Mem:         15011      10492       4518          0         48       3249
+-/+ buffers/cache:       7194       7816
+Swap:            0          0          0
+
+}}}
+
+
+=== 3 round ===
+
+`ab -n 200000 -c 80 http://localhost/request-read-test.php`
+
+`very fast`
+
+{{{ class="brush: bash"
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 07:45:22 2014
+
+connected_clients:399
+used_memory:6943520488
+used_memory_human:6.47G
+used_memory_rss:7064965120
+used_memory_peak:7085051736
+used_memory_peak_human:6.60G
+used_memory_lua:33792
+instantaneous_ops_per_sec:27779
+
+
+}}}
+
+
+=== 4 round ===
+
+`ab -n 200000 -c 80 http://localhost/request-delete-test.php`
+
+`finished in 612 sec`
+
+
+{{{ class="brush: bash"
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 08:22:12 2014
+connected_clients:442
+used_memory:1231221528
+used_memory_human:1.15G
+used_memory_rss:7149993984
+used_memory_peak:7085051736
+used_memory_peak_human:6.60G
+used_memory_lua:33792
+instantaneous_ops_per_sec:61846
+
+redis # del ALL_REQUEST_KEYS
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 08:42:19 2014
+
+connected_clients:442
+used_memory:10265816
+used_memory_human:9.79M
+used_memory_rss:7149993984
+used_memory_peak:7085051736
+used_memory_peak_human:6.60G
+used_memory_lua:33792
+instantaneous_ops_per_sec:1
+
+[root@ec2-us-sco2-prod-redis03 ~]# uptime
+ 08:28:08 up  6:37,  4 users,  load average: 3.85, 2.50, 1.49
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-cli --latency
+min: 0, max: 1, avg: 0.06 (1650 samples)
+
+127.0.0.1:6380> SLOWLOG len
+(integer) 41
+
+127.0.0.1:6380> SLOWLOG get
+ 1) 1) (integer) 40
+    2) (integer) 1389256393
+    3) (integer) 1428211
+    4) 1) "PSYNC"
+       2) "4f8344492b86f55a299d9f98b755ac4833d25df0"
+       3) "8414377463"
+ 2) 1) (integer) 39
+    2) (integer) 1389256253
+    3) (integer) 1481849
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 3) 1) (integer) 38
+    2) (integer) 1389256178
+    3) (integer) 1478099
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 4) 1) (integer) 37
+    2) (integer) 1389256100
+    3) (integer) 1477326
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 5) 1) (integer) 36
+    2) (integer) 1389256022
+    3) (integer) 1475673
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 6) 1) (integer) 35
+    2) (integer) 1389255950
+    3) (integer) 10839
+    4) 1) "LREM"
+       2) "rs_100000000351906"
+       3) "0"
+       4) "r_8957396"
+ 7) 1) (integer) 34
+    2) (integer) 1389255934
+    3) (integer) 1375428
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 8) 1) (integer) 33
+    2) (integer) 1389255844
+    3) (integer) 10622
+    4) 1) "LREM"
+       2) "rs_100000000453896"
+       3) "0"
+       4) "r_11555710"
+ 9) 1) (integer) 32
+    2) (integer) 1389255821
+    3) (integer) 1413870
+    4) 1) "PSYNC"
+       2) "4f8344492b86f55a299d9f98b755ac4833d25df0"
+       3) "7197792179"
+       
+}}}
+
+=== 5 round ===
+
+`ab -n 200000 -c 80 http://localhost/request-write-test.php`
+
+`finished in 1780 sec`
+
+{{{ class="brush: bash"
+
+# 
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+24733 redis     20   0 6895m 6.7g 1160 R 100.4 45.6  79:30.48 redis-server
+10907 redis     20   0 6896m 6.7g  376 R 100.0 45.6   0:08.16 redis-server
+
+[root@ec2-us-sco2-prod-redis03 ~]# free -m
+             total       used       free     shared    buffers     cached
+Mem:         15011      12331       2679          0         65       3196
+-/+ buffers/cache:       9069       5941
+Swap:            0          0          0
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 09:15:16 2014
+
+connected_clients:443
+used_memory:6183807584
+used_memory_human:5.76G
+used_memory_rss:7180931072
+used_memory_peak:7085051736
+used_memory_peak_human:6.60G
+used_memory_lua:33792
+instantaneous_ops_per_sec:64605
+
+127.0.0.1:6380> get uid
+"100000000600001"
+
+127.0.0.1:6380> llen ALL_REQUEST_KEYS
+(integer) 15289383
+
+[root@ec2-us-sco2-prod-redis03 ~]# free -m
+             total       used       free     shared    buffers     cached
+Mem:         15011      10462       4548          0         84       3073
+-/+ buffers/cache:       7305       7705
+Swap:            0          0          0
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-cli -p 6380
+127.0.0.1:6380> SLOWLOG get
+ 1) 1) (integer) 61
+    2) (integer) 1389259204
+    3) (integer) 10187
+    4) 1) "LPUSH"
+       2) "rs_100000000549973"
+       3) "14016850"
+ 2) 1) (integer) 60
+    2) (integer) 1389259037
+    3) (integer) 1464085
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 3) 1) (integer) 59
+    2) (integer) 1389258943
+    3) (integer) 1461167
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 4) 1) (integer) 58
+    2) (integer) 1389258855
+    3) (integer) 1461569
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 5) 1) (integer) 57
+    2) (integer) 1389258773
+    3) (integer) 1452898
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 6) 1) (integer) 56
+    2) (integer) 1389258693
+    3) (integer) 1461633
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 7) 1) (integer) 55
+    2) (integer) 1389258690
+    3) (integer) 44495
+    4) 1) "SETEX"
+       2) "9578001"
+       3) "1296000"
+       4) "100000000375850^A100000467634209^A717239958300677^AsendGiftRequest^A2014-01-09T09:11:29+00:00^AtargetType^CShopKit^BtargetId^C1S... (63 more bytes)"
+ 8) 1) (integer) 54
+    2) (integer) 1389258610
+    3) (integer) 1515450
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 9) 1) (integer) 53
+    2) (integer) 1389258535
+    3) (integer) 1470420
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+10) 1) (integer) 52
+    2) (integer) 1389258533
+    3) (integer) 246931
+    4) 1) "SETEX"
+       2) "8268908"
+       3) "1296000"
+       4) "100000000324390^A100000467634209^A717239958300677^AsendGiftRequest^A2014-01-09T09:08:52+00:00^AtargetType^CShopKit^BtargetId^C1S... (63 more bytes)"
+
+}}}
+
+=== 6 round ===
+
+`ab -n 200000 -c 80 http://localhost/request-delete-test.php`
+
+`finished in 612 sec`
+
+{{{ class="brush: bash"
+
+[root@ec2-us-sco2-prod-redis03 ~]# free -m
+             total       used       free     shared    buffers     cached
+Mem:         15011      14931         79          0         12       3696
+-/+ buffers/cache:      11222       3788
+Swap:            0          0          0
+
+[root@ec2-us-sco2-prod-redis03 ~]# free -m
+             total       used       free     shared    buffers     cached
+Mem:         15011      11292       3718          0         15       2880
+-/+ buffers/cache:       8396       6614
+Swap:            0          0          0
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous...  Thu Jan  9 09:42:48 2014
+connected_clients:443
+used_memory:1905644376
+# used_memory_human:1.77G
+used_memory_human:0.68G
+used_memory_rss:6195265536
+used_memory_peak:5923405808
+used_memory_peak_human:5.52G
+used_memory_lua:33792
+instantaneous_ops_per_sec:57792
+
+
+127.0.0.1:6380> SLOWLOG get
+ 1) 1) (integer) 20
+    2) (integer) 1389261089
+    3) (integer) 352861
+    4) 1) "keys"
+       2) "rs_"
+ 2) 1) (integer) 19
+    2) (integer) 1389261084
+    3) (integer) 357025
+    4) 1) "keys"
+       2) "r_"
+ 3) 1) (integer) 18
+    2) (integer) 1389261009
+    3) (integer) 1580119
+    4) 1) "del"
+       2) "ALL_REQUEST_KEYS"
+ 4) 1) (integer) 17
+    2) (integer) 1389260860
+    3) (integer) 1621751
+    4) 1) "PSYNC"
+       2) "80c34a88772c2d7fc4cd4102c7e29289bb1f2f44"
+       3) "983881253"
+ 5) 1) (integer) 16
+    2) (integer) 1389260693
+    3) (integer) 10507
+    4) 1) "LREM"
+       2) "rs_100000000041499"
+       3) "0"
+       4) "1055199"
+ 6) 1) (integer) 15
+    2) (integer) 1389260681
+    3) (integer) 13370
+    4) 1) "DEL"
+       2) "1239390"
+ 7) 1) (integer) 14
+    2) (integer) 1389260681
+    3) (integer) 1604790
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 8) 1) (integer) 13
+    2) (integer) 1389260599
+    3) (integer) 18121
+    4) 1) "DEL"
+       2) "3107229"
+ 9) 1) (integer) 12
+    2) (integer) 1389260599
+    3) (integer) 1599549
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+10) 1) (integer) 11
+    2) (integer) 1389260514
+    3) (integer) 19090
+    4) 1) "DEL"
+       2) "5043169"
+
+}}}
+
+
+=== 8 Round ===
+
+`ab -n 200000 -c 80 http://localhost/write-test.php`
+
+{{{ class="brush: bash"
+MASTER
+
+#save 900 1
+#save 300 10
+#save 60 10000
+appendonly no
+
+SLAVE
+
+save 900 1
+save 300 10
+save 60 10000
+appendonly yes
+appendfsync everysec
+no-appendfsync-on-rewrite yes
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+
+[root@ec2-us-sco2-prod-redis03 ~]# uptime
+ 03:53:05 up 1 day,  2:02,  6 users,  load average: 3.89, 3.77, 2.68
+ 
+ [root@ec2-us-sco2-prod-redis04 ~]# uptime
+ 03:54:58 up 1 day,  2:03,  5 users,  load average: 1.21, 0.98, 1.52
+
+
+Every 2.0s: redis-cli -p 6379 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec'                                  Fri Jan 10 03:52:45 2014
+
+connected_clients:442
+used_memory:1097838192
+used_memory_human:1.02G
+used_memory_rss:1124204544
+used_memory_peak:1102779000
+used_memory_peak_human:1.03G
+used_memory_lua:33792
+instantaneous_ops_per_sec:10710
+
+
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec'                      Fri Jan 10 03:52:30 2014
+
+connected_clients:442
+used_memory:5449410072
+used_memory_human:5.08G
+used_memory_rss:6214602752
+used_memory_peak:5923405808
+used_memory_peak_human:5.52G
+used_memory_lua:33792
+instantaneous_ops_per_sec:38204
+
+[root@ec2-us-sco2-prod-redis03 ~]# netstat -an | grep 6380 | grep ESTABLISH | wc -l
+442
+[root@ec2-us-sco2-prod-redis03 ~]# netstat -an | grep 6380 | grep TIME_WAIT | wc -l
+27
+[root@ec2-us-sco2-prod-redis03 ~]#
+[root@ec2-us-sco2-prod-redis03 ~]# netstat -an | grep 6379 | grep TIME_WAIT | wc -l
+1
+[root@ec2-us-sco2-prod-redis03 ~]# netstat -an | grep 6379 | grep ESTABLISH | wc -l
+
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-cli
+127.0.0.1:6379> get REQUEST_COUNT
+"600001"
+127.0.0.1:6379> get ACTION_SEED
+"2702582"
+127.0.0.1:6379> get uid
+"100000000600001"
+
+127.0.0.1:6380> get uid
+"100000000600001"
+127.0.0.1:6380> get REQUEST_SEED
+"15287339"
+
+
+[root@ec2-us-sco2-prod-redis03 ~]# redis-cli -p 6379
+127.0.0.1:6379> SLOWLOG get
+ 1) 1) (integer) 25
+    2) (integer) 1389326092
+    3) (integer) 13263
+    4) 1) "LRANGE"
+       2) "as_100000000000000"
+       3) "0"
+       4) "-1"
+ 2) 1) (integer) 24
+    2) (integer) 1389326090
+    3) (integer) 12670
+    4) 1) "LRANGE"
+       2) "as_100000000000004"
+       3) "0"
+       4) "-1"
+ 3) 1) (integer) 23
+    2) (integer) 1389326063
+    3) (integer) 13423
+    4) 1) "LRANGE"
+       2) "as_100000000000014"
+       3) "0"
+       4) "-1"
+ 4) 1) (integer) 22
+    2) (integer) 1389325981
+    3) (integer) 19634
+    4) 1) "LRANGE"
+       2) "as_100000000000005"
+       3) "0"
+       4) "-1"
+ 5) 1) (integer) 21
+    2) (integer) 1389325980
+    3) (integer) 15267
+    4) 1) "LRANGE"
+       2) "as_100000000000000"
+       3) "0"
+       4) "-1"
+ 6) 1) (integer) 20
+    2) (integer) 1389325980
+    3) (integer) 15071
+    4) 1) "LRANGE"
+       2) "as_100000000000000"
+       3) "0"
+       4) "-1"
+ 7) 1) (integer) 19
+    2) (integer) 1389325925
+    3) (integer) 11474
+    4) 1) "LRANGE"
+       2) "as_100000000000005"
+       3) "0"
+       4) "-1"
+ 8) 1) (integer) 18
+    2) (integer) 1389325858
+    3) (integer) 20294
+    4) 1) "LRANGE"
+       2) "as_100000000000006"
+       3) "0"
+       4) "-1"
+ 9) 1) (integer) 17
+    2) (integer) 1389325858
+    3) (integer) 12184
+    4) 1) "LRANGE"
+       2) "as_100000000000005"
+       3) "0"
+       4) "-1"
+10) 1) (integer) 16
+    2) (integer) 1389325634
+    3) (integer) 11165
+    4) 1) "LRANGE"
+       2) "as_100000000000003"
+       3) "0"
+       4) "-1"
+       
+127.0.0.1:6379> SLOWLOG len
+(integer) 26
+
+127.0.0.1:6380> SLOWLOG get
+ 1) 1) (integer) 50
+    2) (integer) 1389326166
+    3) (integer) 1352284
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 2) 1) (integer) 49
+    2) (integer) 1389326094
+    3) (integer) 11872
+    4) 1) "LPUSH"
+       2) "rs_100000000597641"
+       3) "15226662"
+ 3) 1) (integer) 48
+    2) (integer) 1389326093
+    3) (integer) 12260
+    4) 1) "EXPIRE"
+       2) "rs_100000000597619"
+       3) "1296000"
+ 4) 1) (integer) 47
+    2) (integer) 1389326092
+    3) (integer) 12474
+    4) 1) "LPUSH"
+       2) "rs_100000000597415"
+       3) "15219909"
+ 5) 1) (integer) 46
+    2) (integer) 1389325981
+    3) (integer) 10636
+    4) 1) "MULTI"
+ 6) 1) (integer) 45
+    2) (integer) 1389325950
+    3) (integer) 20199
+    4) 1) "SETEX"
+       2) "14193176"
+       3) "1296000"
+       4) "100000000557182^A100000467634209^A717239958300677^AsendGiftRequest^A2014-01-10T03:52:28+00:00^AtargetType^CShopKit^BtargetId^C1S... (63 more bytes)"
+ 7) 1) (integer) 44
+    2) (integer) 1389325923
+    3) (integer) 10938
+    4) 1) "SETEX"
+       2) "14015351"
+       3) "1296000"
+       4) "100000000550241^A100000467634209^A717239958300677^AsendGiftRequest^A2014-01-10T03:52:05+00:00^AtargetType^CShopKit^BtargetId^C1S... (63 more bytes)"
+ 8) 1) (integer) 43
+    2) (integer) 1389325706
+    3) (integer) 1354386
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+ 9) 1) (integer) 42
+    2) (integer) 1389325601
+    3) (integer) 1346977
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+10) 1) (integer) 41
+    2) (integer) 1389325500
+    3) (integer) 1358190
+    4) 1) "PSYNC"
+       2) "?"
+       3) "-1"
+127.0.0.1:6380> SLOWLOG len
+(integer) 51
+
+}}}
+
+
+=== 9 Round ===
+
+`ab -n 200000 -c 80 http://localhost/delete-test.php`
+
+{{{ class="brush: bash"
+
+[root@ec2-us-sco2-prod-redis03 ~]# uptime
+ 06:37:03 up 1 day,  4:46,  5 users,  load average: 3.31, 2.66, 1.34
+
+# watch "redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec|mem_fragmentation_ratio'"
+
+Every 2.0s: redis-cli info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec|mem_fragmentation_ratio'                Fri Jan 10 06:49:24 2014
+
+connected_clients:442
+used_memory:381034344
+used_memory_human:363.38M
+used_memory_rss:1171054592
+used_memory_peak:1148458984
+used_memory_peak_human:1.07G
+used_memory_lua:33792
+mem_fragmentation_ratio:3.07
+instantaneous_ops_per_sec:7820
+
+# watch "redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec|mem_fragmentation_ratio'"
+Every 2.0s: redis-cli -p 6380 info |grep -E 'memory|connected_clients|instantaneous_ops_per_sec|mem_fragmentatio...  Fri Jan 10 06:48:13 2014
+
+connected_clients:442
+used_memory:10222080
+used_memory_human:9.75M
+used_memory_rss:6208270336
+used_memory_peak:5923405808
+used_memory_peak_human:5.52G
+used_memory_lua:33792
+mem_fragmentation_ratio:607.34
+instantaneous_ops_per_sec:36535
+
+}}}
+
+
+== Slave Crash ==
+  * Aof 1G to rewirte
+  * ratio 100%
+  * Replication buffer increase
+  * timeout change to 3 mins (default 1 min)

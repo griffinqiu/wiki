@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vimwiki Cheat Sheet</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link type="text/css" rel="stylesheet" href="styles/shCore.css" /> 
+	<link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css" /> 
+	<link type="text/css" rel="stylesheet" href="styles/main.css" />
+	<script type="text/javascript" src="scripts/shCore.js"></script> 
+	<script type="text/javascript" src="scripts/shAutoloader.js"></script> 
+</head>
+<body>
+	<div class="content">
+	
+<p>
+%toc Vimwiki Cheat Sheet
+</p>
+
+<div id="Mappings"><h2 id="Mappings">Mappings</h2></div>
+
+<div id="Mappings-Global mappings"><h3 id="Global mappings">Global mappings</h3></div>
+<ul>
+<li>
+[count]&lt;Leader&gt;ww or &lt;Plug&gt;VimwikiIndex
+
+<li>
+[count]&lt;Leader&gt;wt or &lt;Plug&gt;VimwikiTabIndex
+
+<li>
+&lt;Leader&gt;ws or &lt;Plug&gt;VimwikiUISelect
+
+<li>
+[count]&lt;Leader&gt;wi or &lt;Plug&gt;VimwikiDiaryIndex
+
+<li>
+[count]&lt;Leader&gt;w&lt;Leader&gt;w or &lt;Plug&gt;VimwikiMakeDiaryNote
+
+</ul>
+
+<div id="Mappings-Local mappings"><h3 id="Local mappings">Local mappings</h3></div>
+<ul>
+<li>
+&lt;Leader&gt;wh &lt;Plug&gt;Vimwiki2HTML
+
+<li>
+&lt;Leader&gt;whh &lt;Plug&gt;Vimwiki2HTMLBrowse
+
+<li>
+&lt;Leader&gt;w&lt;Leader&gt;i &lt;Plug&gt;VimwikiDiaryGenerateLinks
+
+<li>
+&lt;CR&gt;, &lt;S-CR&gt;, &lt;C-CR&gt;, &lt;C-S-CR&gt;, &lt;Backspace&gt;
+
+<li>
+&lt;Tab&gt;, &lt;S-Tab&gt;
+
+<li>
+&lt;Leader&gt;wd &lt;Plug&gt;VimwikiDeleteLink
+
+<li>
+&lt;Leader&gt;wr &lt;Plug&gt;VimwikiRenameLink
+
+<li>
+:nmap &lt;S-Space&gt; &lt;Plug&gt;VimwikiToggleListItem
+
+<li>
+=, -, +
+
+<li>
+glm, gll, gl8, gl3, gl-, gl1, gqq
+
+<li>
+&lt;A-Left&gt;, &lt;A-Right&gt;	|:VimwikiTableMoveColumnLeft|, |VimwikiTableMoveColumnRight|
+
+<li>
+&lt;C-Up&gt;, &lt;C-Down&gt;	|:VimwikiDiaryPrevDay|, |:VimwikiDiaryNextDay|
+
+</ul>
+
+<div id="Mappings-Text objects"><h3 id="Text objects">Text objects</h3></div>
+<ul>
+<li>
+ah, ih
+
+<li>
+a\, i\	-	Table cell
+
+<li>
+ac, ic	-	Inner table column
+
+</ul>
+
+<div id="Useful commands"><h2 id="Useful commands">Useful commands</h2></div>
+<ul>
+<li>
+:VimwikiSearch /pattern/ or :VWS /pattern/
+
+<li>
+:VimwikiTable
+
+</ul>
+
+<div id="Wiki syntax"><h2 id="Wiki syntax">Wiki syntax</h2></div>
+
+<div id="Wiki syntax-Typefaces"><h3 id="Typefaces">Typefaces</h3></div>
+<ul>
+<li>
+<span id="Wiki syntax-Typefaces-bold text"></span><strong id="bold text">bold text</strong>
+
+<li>
+<em>italic text</em>
+
+<li>
+<del>strikeout text</del>
+
+<li>
+<code>code (no syntax) text</code>
+
+<li>
+super<sup><small>script</small></sup>
+
+<li>
+sub<sub><small>script</small></sub>
+
+</ul>
+
+<div id="Wiki syntax-Links"><h3 id="Links">Links</h3></div>
+<p>
+Link with spaces in it: &gt;
+  <a href="This is a link.html">This is a link</a>
+or: &gt;
+  <a href="This is a link source.html">Description of the link</a>
+</p>
+
+<p>
+Links to directories (ending with a "/") are also supported: &gt;
+  <a href="home&#47;somebody&#47;">Home Directory</a>
+</p>
+
+<p>
+Use |g:vimwiki_dir_link| to control the behaviour when opening directories.
+</p>
+
+<p>
+Raw URLs~
+</p>
+
+<p>
+Raw URLs are also supported: &gt;
+  <a href="http:&#47;&#47;code.google.com&#47;p&#47;vimwiki">http://code.google.com/p/vimwiki</a>
+  <a href="mailto:habamax@gmail.com">mailto:habamax@gmail.com</a>
+  <a href="ftp:&#47;&#47;vim.org">ftp://vim.org</a>
+</p>
+  
+<div id="Wiki syntax-Headers"><h3 id="Headers">Headers</h3></div>
+
+<div id="Wiki syntax-Paragraphs"><h3 id="Paragraphs">Paragraphs</h3></div>
+
+<p>
+This is first paragraph
+with two lines.
+</p>
+
+<p>
+This is a second paragraph with
+two lines.
+</p>
+
+<div id="Wiki syntax-Lists"><h3 id="Lists">Lists</h3></div>
+
+<ul>
+<li>
+Bulleted list item 1
+
+<li>
+Bulleted list item 2
+
+<ul>
+<li>
+Bulleted list sub item 1
+
+<li>
+Bulleted list sub item 2
+
+<li>
+more ...
+
+<ul>
+<li>
+and more ...
+
+<li>
+...
+
+</ul>
+<li>
+Bulleted list sub item 3
+
+<li>
+etc.
+
+</ul>
+</ul>
+
+<div id="Wiki syntax-Tables"><h3 id="Tables">Tables</h3></div>
+
+<table>
+<tr>
+<th>
+Year
+</th>
+<th>
+Temperature (low)
+</th>
+<th>
+Temperature (high)
+</th>
+</tr>
+<tr>
+<td>
+1900
+</td>
+<td>
+-10
+</td>
+<td>
+25
+</td>
+</tr>
+<tr>
+<td>
+1910
+</td>
+<td>
+-15
+</td>
+<td>
+30
+</td>
+</tr>
+<tr>
+<td>
+1920
+</td>
+<td>
+-10
+</td>
+<td>
+32
+</td>
+</tr>
+<tr>
+<td>
+1930
+</td>
+<td>
+<em>N/A</em>
+</td>
+<td>
+<em>N/A</em>
+</td>
+</tr>
+<tr>
+<td>
+1940
+</td>
+<td>
+-2
+</td>
+<td>
+40
+</td>
+</tr>
+</table>
+
+<table class='center'>
+<tr>
+<td rowspan="3">
+a
+</td>
+<td>
+b
+</td>
+<td>
+c
+</td>
+<td>
+d
+</td>
+</tr>
+<tr>
+<td rowspan="2" colspan="2">
+e
+</td>
+<td>
+f
+</td>
+</tr>
+<tr>
+<td>
+g
+</td>
+</tr>
+<tr>
+<td colspan="4">
+h
+</td>
+</tr>
+</table>
+ 
+<div id="Wiki syntax-Preformatted text"><h3 id="Preformatted text">Preformatted text</h3></div>
+<pre>
+  Tyger! Tyger! burning bright
+   In the forests of the night,
+    What immortal hand or eye
+     Could frame thy fearful symmetry?
+  In what distant deeps or skies
+   Burnt the fire of thine eyes?
+    On what wings dare he aspire?
+     What the hand dare sieze the fire?
+</pre>
+
+<div id="Wiki syntax-Mathematical formulae"><h3 id="Mathematical formulae">Mathematical formulae</h3></div>
+
+<p>
+Mathematical formulae are highlighted, and can be rendered in HTML using the
+powerful open source display engine MathJax (<a href="http:&#47;&#47;www.mathjax.org&#47;).">http://www.mathjax.org/).</a>
+</p>
+
+<div id="Wiki syntax-Blockquotes"><h3 id="Blockquotes">Blockquotes</h3></div>
+<blockquote>
+This would be a blockquote in vimwiki. It is not highlighted in vim but
+could be styled by CSS in HTML. Blockquotes are usually used to quote a
+long piece of text from another source.
+</blockquote>
+    
+<div id="Wiki syntax-Comments"><h3 id="Comments">Comments</h3></div>
+
+
+<div id="Wiki syntax-Horizontal line"><h3 id="Horizontal line">Horizontal line</h3></div>
+
+<hr />
+<hr />
+
+<div id="Wiki syntax-Schemes"><h3 id="Schemes">Schemes</h3></div>
+<p>
+<a href="wiki.html#:This is a link">wiki#:This is a link</a>
+<a href="wiki.html#:This is a link source">Description of the link</a>
+<a href="diary&#47;2012-03-05.html">diary:2012-03-05</a>
+This scheme precludes explicit inclusion of |vimwiki-option-diary_rel_path|,
+and is most useful on subwiki pages to avoid links such as: &gt;
+<a href="..&#47;..&#47;diary&#47;2012-03-05.html">../../diary/2012-03-05</a>
+<a href="..&#47;assets&#47;data.csv">data (CSV)</a>
+<a href="&#47;home&#47;somebody&#47;a&#47;b&#47;c&#47;music.mp3">file:///home/somebody/a/b/c/music.mp3</a>
+</p>
+
+<div id="Wiki syntax-Transclusions"><h3 id="Transclusions">Transclusions</h3></div>
+
+<p>
+<img src="../../images/vimwiki_logo.png" />
+</p>
+
+<p>
+<img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" />
+</p>
+
+<p>
+<img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" alt="Vimwiki" />
+</p>
+
+<p>
+<img src="http://.../vimwiki_logo.png" alt="cool stuff" style="width:150px; height: 120px;" />
+</p>
+
+<p>
+<img src="http://.../vimwiki_logo.png" alt="class" class="center flow blabla" />
+</p>
+
+<p>
+<a href="http:&#47;&#47;someaddr.com&#47;bigpicture.jpg"><img src="http://someaddr.com/thumbnail.jpg" /></a>
+</p>
+
+<div id="Folding&#47;Outline"><h2 id="Folding&#47;Outline">Folding/Outline</h2></div>
+
+<div id="Placeholders"><h2 id="Placeholders">Placeholders</h2></div>
+<ul>
+<li>
+<code>%title</code>
+
+<li>
+<code>%toc</code>
+
+<li>
+<code>%nohtml</code>
+
+<li>
+<code>%template</code>
+
+</ul>
+
+
+<div id="Todo lists"><h2 id="Todo lists">Todo lists</h2></div>
+<ul>
+<li class="done1">
+Toggle list item on/off.
+
+<ul>
+<li class="done0">
+Simple toggling between [ ] and [X].
+
+<li class="done0">
+All list's subitems should be toggled on/off appropriately.
+
+<li class="done0">
+Toggle child subitems only if current line is list item
+
+<li class="done4">
+Parent list item should be toggled depending on it's child items.
+
+</ul>
+<li class="done0">
+Make numbered list items toggleable too
+
+<li class="done0">
+Add highlighting to list item boxes
+
+<li class="done4">
+Add [ ] to the next created with o, O and &lt;CR&gt; list item.
+
+<li class="done0">
+
+
+</ul>
+
+<div id="Diary"><h2 id="Diary">Diary</h2></div>
+<div id="Diary-Calendar"><h3 id="Calendar">Calendar</h3></div>
+
+	</div>
+<script type="text/javascript">
+function path() {
+	var args = arguments, result = [];
+	for(var i = 0; i < args.length; i++) {
+		result.push(args[i].replace('@', 'scripts/'));
+	}
+	return result
+};
+
+SyntaxHighlighter.autoloader.apply(null, path(
+	'applescript            @shBrushAppleScript.js',
+	'actionscript3 as3      @shBrushAS3.js',
+	'bash shell             @shBrushBash.js',
+	'coldfusion cf          @shBrushColdFusion.js',
+	'cpp c                  @shBrushCpp.js',
+	'c# c-sharp csharp      @shBrushCSharp.js',
+	'css                    @shBrushCss.js',
+	'delphi pascal          @shBrushDelphi.js',
+	'diff patch pas         @shBrushDiff.js',
+	'erl erlang             @shBrushErlang.js',
+	'groovy                 @shBrushGroovy.js',
+	'java                   @shBrushJava.js',
+	'jfx javafx             @shBrushJavaFX.js',
+	'js jscript javascript  @shBrushJScript.js',
+	'perl pl                @shBrushPerl.js',
+	'php                    @shBrushPhp.js',
+	'text plain             @shBrushPlain.js',
+	'py python              @shBrushPython.js',
+	'ruby rails ror rb      @shBrushRuby.js',
+	'sass scss              @shBrushSass.js',
+	'scala                  @shBrushScala.js',
+	'sql                    @shBrushSql.js',
+	'vb vbnet               @shBrushVb.js',
+	'xml xhtml xslt html    @shBrushXml.js'
+));
+SyntaxHighlighter.all();
+</script> 
+</body>
+</html>
