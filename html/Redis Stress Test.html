@@ -13,7 +13,7 @@
 	<div class="content">
 	
 
-<h2 id="toc_0.1">Todo List</h2>
+<div id="Todo List"><h2 id="Todo List">Todo List</h2></div>
 <ul>
 <li class="done4">
 GNS prepare Servers and initialize environment
@@ -32,7 +32,7 @@ The Neighbor Action Write/Read Test.
 
 </ul>
     
-<h2 id="toc_0.2">Server infos</h2>
+<div id="Server infos"><h2 id="Server infos">Server infos</h2></div>
 
 <ul>
 <li>
@@ -70,8 +70,8 @@ AB03    ec2-50-16-159-244.compute-1.amazonaws.com
 </ul>
 </ul>
 
-<h2 id="toc_0.3">Redis Benchmark</h2>
-<h3 id="toc_0.3.1">Master - 3 instances run in the same time</h3>
+<div id="Redis Benchmark"><h2 id="Redis Benchmark">Redis Benchmark</h2></div>
+<div id="Redis Benchmark-Master - 3 instances run in the same time"><h3 id="Master - 3 instances run in the same time">Master - 3 instances run in the same time</h3></div>
 
 <pre  class="brush: bash">
 
@@ -128,7 +128,7 @@ MSET (10 keys): 16463.62 requests per second
 
 </pre>
 
-<h3 id="toc_0.3.2">Slave</h3>
+<div id="Redis Benchmark-Slave"><h3 id="Slave">Slave</h3></div>
 <pre  class="brush: bash">
 [root@ec2-us-sco2-prod-redis04 ~]# redis-benchmark -c 100 -n 100000 -q
 PING_INLINE: 27770.06 requests per second
@@ -148,10 +148,10 @@ LRANGE_600 (first 600 elements): 7178.75 requests per second
 MSET (10 keys): 28384.90 requests per second
 </pre>
 
-<h2 id="toc_0.4">Redis tuning (Not start)</h2>
+<div id="Redis tuning (Not start)"><h2 id="Redis tuning (Not start)">Redis tuning (Not start)</h2></div>
 
 <p>
-<a href=".html">.html</a> Server    | Option                      | Params   |
+<a href="Redis Stress Test.html">Redis Stress Test.html</a> Server    | Option                      | Params   |
 <table>
 <tr>
 <td rowspan="4">
@@ -339,7 +339,7 @@ set uid 100000000000000
 
 </ul>
 
-<h2 id="toc_0.5">CheckPoint in Stress Test</h2>
+<div id="CheckPoint in Stress Test"><h2 id="CheckPoint in Stress Test">CheckPoint in Stress Test</h2></div>
 <ul>
 <li class="done4">
 Httpd error_log
@@ -355,7 +355,7 @@ Network connection (zabbix)
 
 </ul>
 
-<h2 id="toc_0.6">Record Info</h2>
+<div id="Record Info"><h2 id="Record Info">Record Info</h2></div>
 <ul>
 <li class="done4">
 AB request count * concurrent count
@@ -383,9 +383,9 @@ How many requests/actions in Redis
 ib
 </p>
 
-<h2 id="toc_0.7">User Request Stress Test</h2>
+<div id="User Request Stress Test"><h2 id="User Request Stress Test">User Request Stress Test</h2></div>
 
-<h3 id="toc_0.7.1">1 round</h3>
+<div id="User Request Stress Test-1 round"><h3 id="1 round">1 round</h3></div>
 
 <p>
 <code>ab -n 10000 -c 40 http://localhost/request-write-test.php</code>
@@ -438,7 +438,7 @@ instantaneous_ops_per_sec:50590
 </pre>
 
 
-<h3 id="toc_0.7.2">2 round</h3>
+<div id="User Request Stress Test-2 round"><h3 id="2 round">2 round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/request-write-test.php</code>
@@ -545,7 +545,7 @@ Swap:            0          0          0
 </pre>
 
 
-<h3 id="toc_0.7.3">3 round</h3>
+<div id="User Request Stress Test-3 round"><h3 id="3 round">3 round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/request-read-test.php</code>
@@ -572,7 +572,7 @@ instantaneous_ops_per_sec:27779
 </pre>
 
 
-<h3 id="toc_0.7.4">4 round</h3>
+<div id="User Request Stress Test-4 round"><h3 id="4 round">4 round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/request-delete-test.php</code>
@@ -677,7 +677,7 @@ min: 0, max: 1, avg: 0.06 (1650 samples)
        
 </pre>
 
-<h3 id="toc_0.7.5">5 round</h3>
+<div id="User Request Stress Test-5 round"><h3 id="5 round">5 round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/request-write-test.php</code>
@@ -790,7 +790,7 @@ Swap:            0          0          0
 
 </pre>
 
-<h3 id="toc_0.7.6">6 round</h3>
+<div id="User Request Stress Test-6 round"><h3 id="6 round">6 round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/request-delete-test.php</code>
@@ -886,7 +886,7 @@ instantaneous_ops_per_sec:57792
 </pre>
 
 
-<h3 id="toc_0.7.7">8 Round</h3>
+<div id="User Request Stress Test-8 Round"><h3 id="8 Round">8 Round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/write-test.php</code>
@@ -1108,7 +1108,7 @@ instantaneous_ops_per_sec:38204
 </pre>
 
 
-<h3 id="toc_0.7.8">9 Round</h3>
+<div id="User Request Stress Test-9 Round"><h3 id="9 Round">9 Round</h3></div>
 
 <p>
 <code>ab -n 200000 -c 80 http://localhost/delete-test.php</code>
@@ -1149,7 +1149,7 @@ instantaneous_ops_per_sec:36535
 </pre>
 
 
-<h2 id="toc_0.8">Slave Crash</h2>
+<div id="Slave Crash"><h2 id="Slave Crash">Slave Crash</h2></div>
 <ul>
 <li>
 Aof 1G to rewirte
